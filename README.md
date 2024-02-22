@@ -2,8 +2,8 @@
 This is the portfolio of my code for the Final Project of Computational Biology 2 in Winter 2024.
 
 
-#Sequence Objects
-##Part 1
+# Sequence Objects
+## Part 1
 ```python
 from Bio.Seq import Seq
 ```
