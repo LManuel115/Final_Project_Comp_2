@@ -219,7 +219,7 @@ str(my_seq)
 
 
 ```python
-# We canuse a verb placeholder to show what our string of letters is
+# We can use a verb placeholder to show what our string of letters is
 fasta_format_string = ">Name/n%s/n" % my_seq
 ```
 
@@ -263,7 +263,7 @@ seq2 + seq1
 
 
 
-
+## Part 2
 ```python
 # We can manipulate our string even more
 contigs = [Seq("ATG"), Seq("ATCCCG"), Seq("TTTCGA")]
@@ -524,7 +524,7 @@ messenger_rna.translate()
 
 
 
-
+## Part 3
 ```python
 # We can specify the codon tables between a nuclear and mitochondrial codon
 coding_dna.translate(table="Vertebrate Mitochondrial")
@@ -799,7 +799,7 @@ len(unknown_seq)
 
 
 
-
+## Part 4
 ```python
 # We can pull certain sequences from a data table and work with a partially defined sequence
 seq = Seq({117512683: "TTGAAAACCTGAATGTGAGAGTCAGTCAAGGATAGT"}, length = 159345973)
