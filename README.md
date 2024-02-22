@@ -6641,3 +6641,445 @@ show_pic(blended)
 
 ```
 
+# Aspect Detection
+## Corner Detection
+
+```python
+# We can import our necessary files
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt
+%matplotlib inline
+```
+
+
+```python
+# We can import our empty chess board images and convert it to RGB
+flat_chess = cv2.imread("Chess Board.jpg")
+flat_chess = cv2.cvtColor(flat_chess, cv2.COLOR_BGR2RGB)
+plt.imshow(flat_chess)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f081fc14790>
+
+
+
+
+![png](output_1_1.png)
+
+
+
+```python
+# We can turn our empty chess board into a gray scale
+gray_flat_chess = cv2.cvtColor(flat_chess, cv2.COLOR_BGR2GRAY)
+plt.imshow(gray_flat_chess, cmap = "gray")
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f07eaadde50>
+
+
+
+
+![png](output_2_1.png)
+
+
+
+```python
+# We can import our real chess board image and convert it to RGB color
+real_chess = cv2.imread("SetupChessBoard.jpg")
+real_chess = cv2.cvtColor(real_chess, cv2.COLOR_BGR2RGB)
+plt.imshow(real_chess)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f07ea25c2d0>
+
+
+
+
+![png](output_3_1.png)
+
+
+
+```python
+# We can convert our real chess image into a gray scale image
+gray_real_chess = cv2.cvtColor(real_chess, cv2.COLOR_BGR2GRAY)
+plt.imshow(gray_real_chess, cmap = "gray")
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f07e89cf450>
+
+
+
+
+![png](output_4_1.png)
+
+
+
+```python
+# We can set up Harris corner detection to detect corners
+gray = np.float32(gray_flat_chess)
+dst = cv2.cornerHarris(src = gray, blockSize = 2, ksize = 3, k = 0.04)
+
+dst = cv2.dilate(dst, None)
+```
+
+
+```python
+# We can assign certain corner detection values to a color and print out the results
+flat_chess[dst>0.01*dst.max()] = [255,0,0]
+
+plt.imshow(flat_chess)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f07e88ca110>
+
+
+
+
+![png](output_6_1.png)
+
+
+
+```python
+# We can use Harris corner detection on our real chess board
+gray = np.float32(gray_real_chess)
+dst = cv2.cornerHarris(src = gray, blockSize = 2, ksize = 3, k = 0.04)
+dst = cv2.dilate(dst, None)
+
+# We can print out the corner detection results
+real_chess[dst>0.01*dst.max()] = [255, 0, 0]
+
+plt.imshow(real_chess)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f07e8834450>
+
+
+
+
+![png](output_7_1.png)
+
+
+
+```python
+# We can also use the Shi-Tomasi corner detection method
+
+corners = cv2.goodFeaturesToTrack(gray_flat_chess, 64, 0.01, 10)
+```
+
+
+```python
+# We can assign the color red to the Shi-Tomasi method and print the results
+corners = np.int0(corners)
+
+for i in corners:
+    x,y = i.ravel()
+    cv2.circle(flat_chess, (x,y),3,(255,0,0), -1)
+    
+plt.imshow(flat_chess)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f07e8826710>
+
+
+
+
+![png](output_9_1.png)
+
+
+
+```python
+# We can use the Shi-Tomasi method on the real chess board and use a different color for the corner detection
+corners = cv2.goodFeaturesToTrack(gray_real_chess, 100, 0.01, 10)
+
+corners = np.int0(corners)
+
+for i in corners:
+    x, y = i.ravel()
+    cv2.circle(real_chess, (x,y), 3, (0,255,0), -1)
+    
+plt.imshow(real_chess)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f07e87908d0>
+
+
+
+
+![png](output_10_1.png)
+
+
+
+```python
+
+```
+
+## Edge Detection
+```python
+# We can import our functions
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt
+%matplotlib inline
+```
+
+
+```python
+# We can import and show our image
+img = cv2.imread("Mushroom.jpg")
+plt.imshow(img)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7fae42a55490>
+
+
+
+
+![png](output_1_1.png)
+
+
+
+```python
+# We can create a function to detect edges
+edges = cv2.Canny(image = img, threshold1 = 127, threshold2 = 127)
+
+plt.imshow(edges)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7fae4298aa50>
+
+
+
+
+![png](output_2_1.png)
+
+
+
+```python
+# We can find the median color value of the image
+med_value = np.median(img)
+
+med_value
+```
+
+
+
+
+    104.0
+
+
+
+
+```python
+# We can change our threshold limits
+lower = int(max(0, 0.7*med_value))
+upper = int(min(255, 1.3*med_value))
+
+edges = cv2.Canny(img, threshold1 = lower, threshold2 = upper)
+
+plt.imshow(edges)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7fae4288fa10>
+
+
+
+
+![png](output_4_1.png)
+
+
+
+```python
+# We can keep adjusting the threshold value to improve the clarity
+edges = cv2.Canny(image = img, threshold1 = lower, threshold2 = upper + 100)
+
+plt.imshow(edges)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7fae427fb390>
+
+
+
+
+![png](output_5_1.png)
+
+
+
+```python
+# We can try to blur the picture to increase edge detection
+blurred_img = cv2.blur(img, ksize = (5,5))
+
+edges = cv2.Canny(image=blurred_img,
+                 threshold1 = lower,
+                 threshold2 = upper)
+
+plt.imshow(edges)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7fae4276e610>
+
+
+
+
+![png](output_6_1.png)
+
+
+
+```python
+# We can increase the kernel size of the pixels
+blurred_img = cv2.blur(img, ksize = (7,7))
+
+edges = cv2.Canny(image=blurred_img,
+                 threshold1 = lower,
+                 threshold2 = upper)
+
+plt.imshow(edges)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7fae4275b410>
+
+
+
+
+![png](output_7_1.png)
+
+
+
+```python
+# We can increase the upper threshold limit
+blurred_img = cv2.blur(img, ksize = (7,7))
+
+edges = cv2.Canny(image=blurred_img,
+                 threshold1 = lower,
+                 threshold2 = upper +50)
+
+plt.imshow(edges)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7fae400b3210>
+
+
+
+
+![png](output_8_1.png)
+
+
+
+```python
+# We can increase the upper threshold limit even more
+blurred_img = cv2.blur(img, ksize = (7,7))
+
+edges = cv2.Canny(image=blurred_img,
+                 threshold1 = lower,
+                 threshold2 = upper +100)
+
+plt.imshow(edges)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7fae40011f50>
+
+
+
+
+![png](output_9_1.png)
+
+
+
+```python
+# We can change the upper threshold limit
+blurred_img = cv2.blur(img, ksize = (7,7))
+
+edges = cv2.Canny(image=blurred_img,
+                 threshold1 = lower,
+                 threshold2 = upper +60)
+
+plt.imshow(edges)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7fae3a7edcd0>
+
+
+
+
+![png](output_10_1.png)
+
+
+
+```python
+# We can increase the upper threshold limit
+blurred_img = cv2.blur(img, ksize = (8,8))
+
+edges = cv2.Canny(image=blurred_img,
+                 threshold1 = lower,
+                 threshold2 = upper +50)
+
+plt.imshow(edges)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7fae3a75c750>
+
+
+
+
+![png](output_11_1.png)
+
+
+
+```python
+
+```
+
