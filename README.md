@@ -7083,3 +7083,417 @@ plt.imshow(edges)
 
 ```
 
+# Feature Detection
+## Feature Matches
+
+```python
+# We can import our necessary files
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt
+%matplotlib inline
+```
+
+
+```python
+# We can set up our display function
+def display(img,cmap="gray"):
+    fig = plt.figure(figsize = (12,10))
+    ax = fig.add_subplot(111)
+    ax.imshow(img,cmap="gray")
+```
+
+
+```python
+# We can upload our Cap'N crunch image
+Capn_crunch = cv2.imread("Cap'N Crunch.jpg", 0)
+display(Capn_crunch)
+```
+
+
+![png](output_2_0.png)
+
+
+
+```python
+# We can upload our cereal box image
+cereals = cv2.imread("Cereal Boxes.jpg", 0)
+display(cereals)
+```
+
+
+![png](output_3_0.png)
+
+
+
+```python
+# We can use Brute Force matching to find a match for our Cap'N crunch
+orb = cv2.ORB_create()
+
+kp1,des1 = orb.detectAndCompute(Capn_crunch, mask=None)
+kp2,des2 = orb.detectAndCompute(cereals, mask=None)
+```
+
+
+```python
+# We can run the results of Brute force matching
+bf = cv2.BFMatcher(cv2.NORM_HAMMING, crossCheck = True)
+matches= bf.match(des1, des2)
+```
+
+
+```python
+# We can sort the matches of our brute force matching
+matches = sorted(matches, key = lambda x:x.distance)
+```
+
+
+```python
+# We can calculate the first 25 matches
+Capn_crunch_matches = cv2.drawMatches(Capn_crunch, kp1, cereals, kp2, matches[:25], None, flags = 2)
+```
+
+
+```python
+# We can display the matches
+display(Capn_crunch_matches)
+```
+
+
+![png](output_8_0.png)
+
+
+
+```python
+# We can use the sift technique to match
+sift = cv2.SIFT_create()
+```
+
+
+```python
+# We can continue setting up the sift technique
+kp1, des1 = sift.detectAndCompute(Capn_crunch, None)
+kp2, des2 = sift.detectAndCompute(cereals, None)
+```
+
+
+```python
+# We can use brute force along with the sift method
+bf = cv2.BFMatcher()
+matches = bf.knnMatch(des1, des2, k=2)
+```
+
+
+```python
+# We can determine is a match is good or bad
+good = []
+
+for match1, match2 in matches:
+    if match1.distance < 0.75*match2.distance:
+        good.append([match1])
+```
+
+
+```python
+# We can print the length of total matches and good matches
+print("length of total matches:", len(matches))
+print("length of good matches:", len(good))
+```
+
+    length of total matches: 13686
+    length of good matches: 517
+
+
+
+```python
+# We can print out the sift matches
+sift_matches = cv2.drawMatchesKnn(Capn_crunch, kp1, cereals, kp2, good, None, flags =2)
+display(sift_matches)
+```
+
+
+![png](output_14_0.png)
+
+
+
+```python
+# We can set up sift based matching again
+sift = cv2.SIFT_create()
+
+kp1, des1 = sift.detectAndCompute(Capn_crunch, None)
+kp2, des2 = sift.detectAndCompute(cereals, None)
+```
+
+
+```python
+# We can set up a new type of matching called Flanbased matching
+flann_index_KDtree = 0
+index_params = dict(algorithm=flann_index_KDtree, trees = 5)
+search_params = dict(checks=50)
+```
+
+
+```python
+# We can run our flan matcher
+flann = cv2.FlannBasedMatcher(index_params, search_params)
+
+matches = flann.knnMatch(des1, des2, k=2)
+
+good = []
+
+for match1, match2, in matches:
+    if match1.distance < 0.75*match2.distance:
+        good.append([match1])
+```
+
+
+```python
+# We can print our results for the flan matcher
+flann_matches = cv2.drawMatchesKnn(Capn_crunch, kp1, cereals, kp2, good, None, flags=0)
+display(flann_matches)
+```
+
+
+![png](output_18_0.png)
+
+
+
+```python
+# We can set up our sift match again
+sift = cv2.SIFT_create()
+
+kp1, des1 = sift.detectAndCompute(Capn_crunch, None)
+kp2, des2 = sift.detectAndCompute(cereals, None)
+```
+
+
+```python
+# We can also set up our flan index
+flann_index_KDtree = 0
+index_params = dict(algorithm= flann_index_KDtree, trees = 50)
+search_params = dict(checks = 50)
+```
+
+
+```python
+# We can continue setting up our flann parameters
+flann = cv2.FlannBasedMatcher(index_params, search_params)
+
+matches = flann.knnMatch(des1, des2, k = 2)
+```
+
+
+```python
+# We can create a mask for our matches
+matchesMask = [[0,0] for i in range(len(matches))]
+```
+
+
+```python
+# We can reduce the distance between our features for better matches
+for i, (match1, match2) in enumerate(matches):
+    if match1.distance <0.75*match2.distance:
+        matchesMask[i] = [1,0]
+
+draw_params = dict(matchColor = (0,255,0),
+                  singlePointColor = (255, 0,0),
+                  matchesMask = matchesMask,
+                  flags = 0)
+```
+
+
+```python
+# We can display our flann matches with masks
+flann_matches = cv2.drawMatchesKnn(Capn_crunch, kp1, cereals, kp2, matches, None, **draw_params)
+
+display(flann_matches)
+```
+
+
+![png](output_24_0.png)
+
+
+
+```python
+
+```
+
+## Object Detection
+
+```python
+# We can import our necessary functions
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt
+%matplotlib inline
+```
+
+
+```python
+# We can import our training sunflower in
+full = cv2.imread("Training Sunflower.jpg")
+```
+
+
+```python
+# We can change the color of our sunflower to the RGB color scheme
+full = cv2.cvtColor(full, cv2.COLOR_BGR2RGB)
+```
+
+
+```python
+# We can show our sunflower
+plt.imshow(full)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f9d82cc9910>
+
+
+
+
+![png](output_3_1.png)
+
+
+
+```python
+# We can also upload our testing sunflower
+test = cv2.imread("Testing Sunflower.jpg")
+```
+
+
+```python
+# We can change the color of our sunflower to the RGB color scheme
+test = cv2.cvtColor(test, cv2.COLOR_BGR2RGB)
+```
+
+
+```python
+# We can show our testing sunflowers
+plt.imshow(test)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f9d81d22c90>
+
+
+
+
+![png](output_6_1.png)
+
+
+
+```python
+# We can print our image shapes
+print("Test image shape:", full.shape)
+print("Training image shape:", test.shape)
+```
+
+    Test image shape: (1555, 1404, 3)
+    Training image shape: (675, 1200, 3)
+
+
+
+```python
+# We can use different methods to detect objects so we can save them to a variable
+methods = ["cv2.TM_CCOEFF", "cv2.TM_CCOEFF_NORMED", "cv2.TM_CCORR_NORMED", "cv2.TM_SQDIFF", "cv2.TM_SQDIFF_NORMED"]
+```
+
+
+```python
+# We can write a loop to use the different methods and create a copy of the image
+for m in methods:
+    
+    test_copy = test.copy()
+    method = eval(m)
+    
+    res = cv2.matchTemplate(test_copy, full, method)
+    
+    min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
+    
+#We can draw a rectangle onto our picture
+    if method in [cv2.TM_SQDIFF, cv2.TM_SQDIFF_NORMED]:
+        top_left = min_loc
+    else:
+        top_left = max_loc
+# We want to add width and height to a certain point    
+    height, width, channels = full.shape
+    bottom_right = (top_left[0] + width, top_left[1] + height)
+    
+    cv2.rectangle(test_copy, top_left, bottom_right, (255, 0, 0),10)
+    
+# We can plot aspects of our matching pictures
+    plt.subplot(121)
+    plt.imshow(res)
+    plt.title("Heatmap of template matching")
+    plt.subplot(122)
+    plt.imshow(test_copy)
+    plt.title("Detection of template")
+    
+# We can add a title for the method used
+    plt.suptitle(m)
+    
+    plt.show()
+    print("\n")
+    print("\n")
+```
+
+
+![png](output_9_0.png)
+
+
+    
+    
+    
+    
+
+
+
+![png](output_9_2.png)
+
+
+    
+    
+    
+    
+
+
+
+![png](output_9_4.png)
+
+
+    
+    
+    
+    
+
+
+
+![png](output_9_6.png)
+
+
+    
+    
+    
+    
+
+
+
+![png](output_9_8.png)
+
+
+    
+    
+    
+    
+
+
+
+```python
+
+```
+
