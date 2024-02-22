@@ -5859,3 +5859,785 @@ for alignment in blast_record.alignments:
 
 ```
 
+# Open CV
+## Part 1
+```python
+# We can import our necessary files
+import numpy as np
+import matplotlib.pyplot as plt
+%matplotlib inline
+```
+
+
+```python
+# We can import our CV commands
+import cv2
+```
+
+
+```python
+# We can import our Mushroom picture
+img = cv2.imread("Mushroom.jpg")
+```
+
+
+```python
+# We can determine the type of the image
+type(img)
+```
+
+
+
+
+    numpy.ndarray
+
+
+
+
+```python
+# We can load an incorrect image
+img_wrong = cv2.imread("wrong/path/doesnot/abcdegh.jpg")
+```
+
+
+```python
+# We can check to see if we've downloaded the right image
+type(img_wrong)
+```
+
+
+
+
+    NoneType
+
+
+
+
+```python
+# We can get our image to show
+plt.imshow(img)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f906c8e3550>
+
+
+
+
+![png](output_6_1.png)
+
+
+
+```python
+# We can transform the color of our image
+fix_img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+```
+
+
+```python
+# We can show our fixed image
+plt.imshow(fix_img)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f906c8521d0>
+
+
+
+
+![png](output_8_1.png)
+
+
+
+```python
+# We can make our image gray and see the shape of the image
+img_gray = cv2.imread("Mushroom.jpg", cv2.IMREAD_GRAYSCALE)
+img_gray.shape
+```
+
+
+
+
+    (1080, 1920)
+
+
+
+
+```python
+# We can show our gray image
+plt.imshow(img_gray)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f906c836d10>
+
+
+
+
+![png](output_10_1.png)
+
+
+
+```python
+# We can transform the image again to get a proper gray image
+plt.imshow(img_gray, cmap = "gray")
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f906c7a3b50>
+
+
+
+
+![png](output_11_1.png)
+
+
+
+```python
+# We can resize our image
+fix_img.shape
+```
+
+
+
+
+    (1080, 1920, 3)
+
+
+
+
+```python
+# We can resize our image
+new_img = cv2.resize(fix_img,(1000,400))
+plt.imshow(new_img)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f906c714d50>
+
+
+
+
+![png](output_13_1.png)
+
+
+
+```python
+# We can see our new image dimensions
+new_img.shape
+```
+
+
+
+
+    (400, 1000, 3)
+
+
+
+
+```python
+# We can change the width and height ratios
+w_ratio = 0.5
+h_ratio = 0.5
+
+new_img = cv2.resize(fix_img, (0,0), fix_img, w_ratio, h_ratio)
+```
+
+
+```python
+# We can show our new resized image
+plt.imshow(new_img)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f906c6f5950>
+
+
+
+
+![png](output_16_1.png)
+
+
+
+```python
+# We can see the shape of our new image
+new_img.shape
+```
+
+
+
+
+    (540, 960, 3)
+
+
+
+
+```python
+# We can flip images
+flip_img = cv2.flip(fix_img, 0)
+plt.imshow(flip_img)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f906c65b710>
+
+
+
+
+![png](output_18_1.png)
+
+
+
+```python
+# We can also flip an image horizontally and vertically
+flip_img2 = cv2.flip(fix_img, -1)
+plt.imshow(flip_img2)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f906c5cb4d0>
+
+
+
+
+![png](output_19_1.png)
+
+
+
+```python
+# We can see the type of our image
+type(fix_img)
+```
+
+
+
+
+    numpy.ndarray
+
+
+
+
+```python
+# We can save the flipped image
+cv2.imwrite("Mushroom_fixed_image.jpg", flip_img)
+```
+
+
+
+
+    True
+
+
+
+## Part 2
+```python
+import cv2
+import matplotlib.pyplot as plt
+%matplotlib inline
+```
+
+
+```python
+# We can import our image again
+img = cv2.imread("Mushroom.jpg")
+```
+
+
+```python
+# We can show our original image
+plt.imshow(img)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f906c53d290>
+
+
+
+
+![png](output_24_1.png)
+
+
+
+```python
+# We can fix our colors to show correctly
+img1 = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+```
+
+
+```python
+# We can show our fixed image
+plt.imshow(img1)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f906c52e390>
+
+
+
+
+![png](output_26_1.png)
+
+
+
+```python
+# We can convert our colors to something other than RGB
+img2 = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+```
+
+
+```python
+plt.imshow(img2)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f906c48ef10>
+
+
+
+
+![png](output_28_1.png)
+
+
+
+```python
+# We can also convert our image to HLS color
+img3 = cv2.cvtColor(img, cv2.COLOR_BGR2HLS)
+```
+
+
+```python
+# We can show our image in HLS colors
+plt.imshow(img3)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f906c479a50>
+
+
+
+
+![png](output_30_1.png)
+
+
+
+```python
+# We can assign different images to both img1 and img2 variables
+img1 = cv2.imread("DNC.jpg")
+img2 = cv2.imread("Mushroom.jpg")
+```
+
+
+```python
+# We can show our img1
+plt.imshow(img1)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f906c3e27d0>
+
+
+
+
+![png](output_32_1.png)
+
+
+
+```python
+# We can convert our image into RGB colors
+img1 = cv2.cvtColor(img1, cv2.COLOR_BGR2RGB)
+img2 = cv2.cvtColor(img2, cv2.COLOR_BGR2RGB)
+```
+
+
+```python
+# We can show the RGB version of img1
+plt.imshow(img1)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f906c34c4d0>
+
+
+
+
+![png](output_34_1.png)
+
+
+
+```python
+# We can show the RGB version of img2
+plt.imshow(img2)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f906c339210>
+
+
+
+
+![png](output_35_1.png)
+
+
+
+```python
+# We can resize our images
+img1 = cv2.resize(img1, (1200, 1200))
+img2 = cv2.resize(img2, (1200, 1200))
+```
+
+
+```python
+# We can set our alpha and beta values
+alpha = 0.5
+beta = 0.5
+```
+
+
+```python
+# We can blend our two images together
+blended = cv2.addWeighted(img1, alpha, img2, beta, gamma=0)
+```
+
+
+```python
+# We can show the blended image
+plt.imshow(blended)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f906c29efd0>
+
+
+
+
+![png](output_39_1.png)
+
+
+
+```python
+# We can make the pictures more or less transparent
+alpha = 0.2
+beta = 0.8
+
+blended1 = cv2.addWeighted(img1, alpha, img2, beta, gamma=0)
+plt.imshow(blended)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f906c15aa90>
+
+
+
+
+![png](output_40_1.png)
+
+
+
+```python
+# We can blend using different image sizes
+img1 = cv2.imread("DNC.jpg")
+img2 = cv2.imread("Mushroom.jpg")
+
+img1 = cv2.cvtColor(img1, cv2.COLOR_BGR2RGB)
+img2 = cv2.cvtColor(img2, cv2.COLOR_BGR2RGB)
+
+img1 = cv2.resize(img1, (600,600))
+```
+
+
+```python
+# We can label our resized images as new variables and set them a certain distance from the x and y axis
+large_img = img2
+small_img =img1
+
+x_offset = 0
+y_offset = 0
+
+x_end = x_offset + small_img.shape[1]
+y_end = y_offset +small_img.shape[0]
+
+large_img[y_offset:y_end, x_offset:x_end] = small_img
+# We can print our newly sized pictures onto each other
+plt.imshow(large_img)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f906c0cb450>
+
+
+
+
+![png](output_42_1.png)
+
+
+## Part 3
+```python
+# We can import our necessary programs
+import cv2
+import matplotlib.pyplot as plt
+%matplotlib inline
+```
+
+
+```python
+# We can import our rainbow image
+img = cv2.imread("Rainbow.jpg")
+```
+
+
+```python
+# We can print our rainbow image
+plt.imshow(img)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f906c0b3810>
+
+
+
+
+![png](output_45_1.png)
+
+
+
+```python
+# We can cancel out background colors
+img = cv2.imread("Rainbow.jpg", 0)
+```
+
+
+```python
+# We can print our reduced color image
+plt.imshow(img, cmap = "gray")
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f905f46c410>
+
+
+
+
+![png](output_47_1.png)
+
+
+
+```python
+# We can threshold this image
+ret1, thresh1 = cv2.threshold(img, 127, 255, cv2.THRESH_BINARY)
+```
+
+
+```python
+# We can print our threshold
+ret1
+```
+
+
+
+
+    127.0
+
+
+
+
+```python
+# We can use this threshold to create a black and white image
+plt.imshow(thresh1, cmap = "gray")
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f905f3d7090>
+
+
+
+
+![png](output_50_1.png)
+
+
+
+```python
+# We can inverse the limits of the image
+img2 = cv2.imread("Rainbow.jpg", 0)
+ret1, thresh1 = cv2.threshold(img2, 127, 255, cv2.THRESH_TRUNC)
+plt.imshow(thresh1, cmap = "gray")
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f905f3bc1d0>
+
+
+
+
+![png](output_51_1.png)
+
+
+
+```python
+# We can make the image appear almost 3D
+img3 = cv2.imread("Rainbow.jpg", 0)
+ret1, thresh1 = cv2.threshold(img3, 127, 255, cv2.THRESH_TOZERO)
+plt.imshow(thresh1, cmap = "gray")
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f905f319d50>
+
+
+
+
+![png](output_52_1.png)
+
+
+
+```python
+# We can create a new variable for our crossword image
+img_r = cv2.imread("Crossword.jpg", 0)
+plt.imshow(img_r, cmap = "gray")
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f905f124d90>
+
+
+
+
+![png](output_53_1.png)
+
+
+
+```python
+# We can create a function to show our images
+def show_pic(img):
+    fig = plt.figure(figsize = (15,15))
+    ax = fig.add_subplot(111)
+    ax.imshow(img, cmap = "gray")
+```
+
+
+```python
+# We can show our crossword image
+show_pic(img_r)
+```
+
+
+![png](output_55_0.png)
+
+
+
+```python
+# We can use our new "showpic" function to adjust the image quicker
+ret1, th1 = cv2.threshold(img_r, 127, 255, cv2.THRESH_BINARY)
+show_pic(th1)
+```
+
+
+![png](output_56_0.png)
+
+
+
+```python
+# We can try adjusting the threshold in order to produce a clearer image
+ret1, th1 = cv2.threshold(img_r, 200, 255, cv2.THRESH_BINARY)
+show_pic(th1)
+```
+
+
+![png](output_57_0.png)
+
+
+
+```python
+# We can keep adjusting the threshold to see if we can produce a clearer image
+th2 = cv2.adaptiveThreshold(img_r, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY, 11, 8)
+```
+
+
+```python
+show_pic(th2)
+```
+
+
+![png](output_59_0.png)
+
+
+
+```python
+# We can blend the two images to show different thresholds
+blended = cv2.addWeighted(src1 = th1, alpha = 0.6,
+                         src2 = th2, beta = 0.4, gamma = 0)
+
+show_pic(blended)
+```
+
+
+![png](output_60_0.png)
+
+
+
+```python
+# We can continue to play with blending the images in order to produce better results
+th3 = cv2.adaptiveThreshold(img_r, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY, 11, 8)
+
+blended = cv2.addWeighted(src1 = th1, alpha = 0.6,
+                         src2 = th2, beta = 0.4, gamma=0)
+
+show_pic(blended)
+```
+
+
+![png](output_61_0.png)
+
+
+
+```python
+
+```
+
